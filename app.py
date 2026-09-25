@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
+import subprocess
 
 st.set_page_config(page_title="Omo Forest NDVI Dashboard", layout="wide")
 
@@ -146,3 +147,10 @@ tropical region; a relaxed cloud filter plus seasonal (month sin/cos)
 features improved forecast accuracy meaningfully, though small-data LSTM
 smoothing remains a known limitation on sharp NDVI swings.
     """)
+
+# Dummy handler for Vercel deployment detection
+def app(environ, start_response):
+  status = "200 OK"
+  headers = [("Content-type", "text/plain; charset=utf-8")]
+  start_response(status, headers)
+  return [b"Streamlit App Initialized"]

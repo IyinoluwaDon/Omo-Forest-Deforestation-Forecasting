@@ -11,6 +11,7 @@ Empowering proactive conservation with AI-driven deforestation foresight for the
 
 </div>
 
+
 ## The Strategic "Why" (Overview)
 
 > The Omo Forest, a vital ecological hotspot, faces relentless threats from deforestation, leading to irreversible loss of biodiversity, critical ecosystem services, and increased climate vulnerability. Traditional monitoring methods are often reactive, slow, and resource-intensive, making it challenging for conservationists and policymakers to intervene effectively and prevent damage before it's too late. The urgent need is for an intelligent, proactive system that can predict deforestation patterns, enabling timely and strategic conservation efforts.

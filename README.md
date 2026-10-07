@@ -4,14 +4,6 @@
 
 Empowering proactive conservation with AI-driven deforestation foresight for the Omo Forest.
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen?style=for-the-badge&logo=github)](https://github.com/your-org/Omo-Forest-Deforestation-Forecasting/actions)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](CONTRIBUTING.md)
-[![GitHub Stars](https://img.shields.io/github/stars/your-org/Omo-Forest-Deforestation-Forecasting?style=for-the-badge&color=yellow)](https://github.com/your-org/Omo-Forest-Deforestation-Forecasting/stargazers)
-
-</div>
-
-
 ## The Strategic "Why" (Overview)
 
 > The Omo Forest, a vital ecological hotspot, faces relentless threats from deforestation, leading to irreversible loss of biodiversity, critical ecosystem services, and increased climate vulnerability. Traditional monitoring methods are often reactive, slow, and resource-intensive, making it challenging for conservationists and policymakers to intervene effectively and prevent damage before it's too late. The urgent need is for an intelligent, proactive system that can predict deforestation patterns, enabling timely and strategic conservation efforts.
@@ -45,7 +37,7 @@ This project is built upon a lean yet powerful Python ecosystem, designed for cl
 ```
 .
 ├── 📄 app.py
-├── 📄 omo_ndvi_forecast (4).ipynb
+├── 📄 omo_ndvi_forecast.ipynb
 ├── 📄 README.md
 └── 📄 requirements.txt
 ```
@@ -101,7 +93,7 @@ Ensure you have the following installed:
     ```bash
     jupyter notebook
     ```
-    Your browser will open a new tab. Navigate to and open `omo_ndvi_forecast (4).ipynb` to view and execute the analysis.
+    Your browser will open a new tab. Navigate to and open `omo_ndvi_forecast.ipynb` to view and execute the analysis.
 
 ## Community & Governance
 

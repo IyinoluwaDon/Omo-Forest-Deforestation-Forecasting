@@ -39,6 +39,7 @@ This project is built upon a lean yet powerful Python ecosystem, designed for cl
 ├── 📄 app.py
 ├── 📄 omo_ndvi_forecast.ipynb
 ├── 📄 README.md
+├── 📄 CONTRIBUTION.md
 └── 📄 requirements.txt
 ```
 
@@ -79,13 +80,17 @@ Ensure you have the following installed:
     pip install -r requirements.txt
     ```
 
-4.  **Run the application (if `app.py` is a web interface)**:
+4.  **Run the dashboard**:
 
-    If `app.py` is designed as a web application (e.g., Flask, Streamlit), you might run it with:
     ```bash
-    python app.py
+    streamlit run app.py
     ```
-    Then, open your web browser and navigate to the address indicated in the terminal (e.g., `http://127.0.0.1:5000`).
+    Then open the local URL shown in the terminal (e.g. `http://localhost:8501`).
+
+    > Note: Streamlit apps need a persistent server and cannot be hosted on
+    > Vercel serverless functions. For free hosting, use
+    > [Streamlit Community Cloud](https://share.streamlit.io) with `app.py` as
+    > the main file. See `CONTRIBUTION.md` for details.
 
 5.  **Explore the Jupyter Notebook**:
 

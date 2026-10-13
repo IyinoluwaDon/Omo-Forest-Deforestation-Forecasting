@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import plotly.graph_objects as go
-import subprocess
 
 st.set_page_config(page_title="Omo Forest NDVI Dashboard", layout="wide")
 
@@ -23,7 +21,11 @@ uploaded_file = st.sidebar.file_uploader(
 )
 
 if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file, parse_dates=["date"])
+    try:
+        df = pd.read_csv(uploaded_file, parse_dates=["date"])
+    except Exception as e:
+        st.error(f"Could not read uploaded CSV: {e}")
+        st.stop()
 else:
     st.info(
         "No file uploaded — showing example/demo data. "
@@ -37,6 +39,27 @@ else:
     ]
     df = pd.DataFrame({"date": demo_dates, "ndvi": demo_values})
     df["image_count"] = 1
+
+# Validate required columns and coerce types
+REQUIRED_COLS = {"date", "ndvi"}
+if not REQUIRED_COLS.issubset(df.columns):
+    st.error(
+        f"Uploaded CSV must contain columns {sorted(REQUIRED_COLS)}. "
+        f"Found columns: {list(df.columns)}"
+    )
+    st.stop()
+
+try:
+    df["date"] = pd.to_datetime(df["date"], errors="coerce")
+    df["ndvi"] = pd.to_numeric(df["ndvi"], errors="coerce")
+except Exception as e:
+    st.error(f"Could not parse 'date'/'ndvi' columns: {e}")
+    st.stop()
+
+df = df.dropna(subset=["date", "ndvi"])
+if df.empty:
+    st.error("No valid rows found after parsing 'date' and 'ndvi'.")
+    st.stop()
 
 df = df.sort_values("date").reset_index(drop=True)
 
@@ -80,14 +103,22 @@ st.caption(
 st.subheader("Explore a Date Range")
 
 min_date, max_date = df["date"].min(), df["date"].max()
-date_range = st.slider(
-    "Select range",
-    min_value=min_date.to_pydatetime(),
-    max_value=max_date.to_pydatetime(),
-    value=(min_date.to_pydatetime(), max_date.to_pydatetime()),
-)
 
-filtered = df[(df["date"] >= date_range[0]) & (df["date"] <= date_range[1])]
+if min_date == max_date:
+    st.info("Only a single month of data available — showing that point.")
+    filtered = df
+else:
+    date_range = st.slider(
+        "Select range",
+        min_value=min_date.to_pydatetime(),
+        max_value=max_date.to_pydatetime(),
+        value=(min_date.to_pydatetime(), max_date.to_pydatetime()),
+    )
+
+    filtered = df[
+        (df["date"] >= pd.to_datetime(date_range[0]))
+        & (df["date"] <= pd.to_datetime(date_range[1]))
+    ]
 
 fig2 = go.Figure()
 fig2.add_trace(go.Bar(
@@ -110,7 +141,34 @@ forecast_file = st.sidebar.file_uploader(
 )
 
 if forecast_file is not None:
-    forecast_df = pd.read_csv(forecast_file, parse_dates=["date"])
+    try:
+        forecast_df = pd.read_csv(forecast_file, parse_dates=["date"])
+    except Exception as e:
+        st.error(f"Could not read forecast CSV: {e}")
+        st.stop()
+
+    if not {"date", "forecast_ndvi"}.issubset(forecast_df.columns):
+        st.error(
+            "Forecast CSV must contain columns ['date', 'forecast_ndvi']. "
+            f"Found columns: {list(forecast_df.columns)}"
+        )
+        st.stop()
+
+    try:
+        forecast_df["date"] = pd.to_datetime(forecast_df["date"], errors="coerce")
+        forecast_df["forecast_ndvi"] = pd.to_numeric(
+            forecast_df["forecast_ndvi"], errors="coerce"
+        )
+    except Exception as e:
+        st.error(f"Could not parse forecast columns: {e}")
+        st.stop()
+
+    forecast_df = forecast_df.dropna(subset=["date", "forecast_ndvi"]).sort_values(
+        "date"
+    )
+    if forecast_df.empty:
+        st.error("No valid rows in forecast CSV after parsing.")
+        st.stop()
 
     fig3 = go.Figure()
     fig3.add_trace(go.Scatter(
@@ -147,10 +205,3 @@ tropical region; a relaxed cloud filter plus seasonal (month sin/cos)
 features improved forecast accuracy meaningfully, though small-data LSTM
 smoothing remains a known limitation on sharp NDVI swings.
     """)
-
-# Dummy handler for Vercel deployment detection
-def app(environ, start_response):
-  status = "200 OK"
-  headers = [("Content-type", "text/plain; charset=utf-8")]
-  start_response(status, headers)
-  return [b"Streamlit App Initialized"]

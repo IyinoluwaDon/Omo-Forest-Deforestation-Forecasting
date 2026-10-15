@@ -7,8 +7,15 @@ st.set_page_config(page_title="Omo Forest NDVI Dashboard", layout="wide")
 st.title("🌳 Omo Forest Reserve — NDVI Vegetation Monitor")
 st.caption(
     "Sentinel-2 based NDVI time series and LSTM forecast over Omo Forest "
-    "Reserve, Ogun State, Nigeria. Built entirely with free tools "
-    "(Google Earth Engine, Colab, TensorFlow)."
+    "Reserve, Ogun State, Nigeria."
+    
+)
+st.markdown(
+    """
+    <iframe src="https://ghbtns.com/github-btn.html?user=IyinoluwaDon&repo=Omo-Forest-Deforestation-Forecasting&type=star&count=true&size=large" 
+    frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
+    """,
+    unsafe_allow_html=True
 )
 
 # ---------------------------------------------------------------

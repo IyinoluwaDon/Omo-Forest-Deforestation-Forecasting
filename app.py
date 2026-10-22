@@ -9,11 +9,11 @@ st.title("🌳 Omo Forest Reserve — NDVI Vegetation Monitor")
 st.caption(
     "CSV explorer for historical NDVI and optional externally generated forecasts over Omo Forest "
     "Reserve, Ogun State, Nigeria."
-    
+
 )
 st.markdown(
     """
-    <iframe src="https://ghbtns.com/github-btn.html?user=IyinoluwaDon&repo=Omo-Forest-Deforestation-Forecasting&type=star&count=true&size=large" 
+    <iframe src="https://ghbtns.com/github-btn.html?user=IyinoluwaDon&repo=Omo-Forest-Deforestation-Forecasting&type=star&count=true&size=large"
     frameborder="0" scrolling="0" width="170" height="30" title="GitHub"></iframe>
     """,
     unsafe_allow_html=True
@@ -80,7 +80,7 @@ fig.update_layout(
     height=450,
     hovermode="x unified",
 )
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, width="stretch")
 
 st.caption(
     "NDVI ranges from -1 to 1. Values above ~0.6 typically indicate dense, "
@@ -119,7 +119,7 @@ fig2.add_trace(go.Bar(
     name="NDVI",
 ))
 fig2.update_layout(height=350, xaxis_title="Date", yaxis_title="NDVI")
-st.plotly_chart(fig2, use_container_width=True)
+st.plotly_chart(fig2, width="stretch")
 
 # ---------------------------------------------------------------
 # Forecast section (optional, if forecast CSV provided)
@@ -156,7 +156,7 @@ if forecast_file is not None:
         line=dict(color="orange", dash="dash"),
     ))
     fig3.update_layout(height=450, xaxis_title="Date", yaxis_title="NDVI")
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3, width="stretch")
 else:
     st.caption(
         "Upload a forecast CSV (from the notebook's Step 7 output) to overlay "

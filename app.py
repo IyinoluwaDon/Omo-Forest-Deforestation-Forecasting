@@ -1,3 +1,4 @@
+from validation import monthly_series
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
@@ -6,7 +7,7 @@ st.set_page_config(page_title="Omo Forest NDVI Dashboard", layout="wide")
 
 st.title("🌳 Omo Forest Reserve — NDVI Vegetation Monitor")
 st.caption(
-    "Sentinel-2 based NDVI time series and LSTM forecast over Omo Forest "
+    "CSV explorer for historical NDVI and optional externally generated forecasts over Omo Forest "
     "Reserve, Ogun State, Nigeria."
     
 )
@@ -47,28 +48,11 @@ else:
     df = pd.DataFrame({"date": demo_dates, "ndvi": demo_values})
     df["image_count"] = 1
 
-# Validate required columns and coerce types
-REQUIRED_COLS = {"date", "ndvi"}
-if not REQUIRED_COLS.issubset(df.columns):
-    st.error(
-        f"Uploaded CSV must contain columns {sorted(REQUIRED_COLS)}. "
-        f"Found columns: {list(df.columns)}"
-    )
-    st.stop()
-
 try:
-    df["date"] = pd.to_datetime(df["date"], errors="coerce")
-    df["ndvi"] = pd.to_numeric(df["ndvi"], errors="coerce")
-except Exception as e:
-    st.error(f"Could not parse 'date'/'ndvi' columns: {e}")
+    df = monthly_series(df)
+except ValueError as exc:
+    st.error(str(exc))
     st.stop()
-
-df = df.dropna(subset=["date", "ndvi"])
-if df.empty:
-    st.error("No valid rows found after parsing 'date' and 'ndvi'.")
-    st.stop()
-
-df = df.sort_values("date").reset_index(drop=True)
 
 # ---------------------------------------------------------------
 # Summary stats
@@ -154,27 +138,10 @@ if forecast_file is not None:
         st.error(f"Could not read forecast CSV: {e}")
         st.stop()
 
-    if not {"date", "forecast_ndvi"}.issubset(forecast_df.columns):
-        st.error(
-            "Forecast CSV must contain columns ['date', 'forecast_ndvi']. "
-            f"Found columns: {list(forecast_df.columns)}"
-        )
-        st.stop()
-
     try:
-        forecast_df["date"] = pd.to_datetime(forecast_df["date"], errors="coerce")
-        forecast_df["forecast_ndvi"] = pd.to_numeric(
-            forecast_df["forecast_ndvi"], errors="coerce"
-        )
-    except Exception as e:
-        st.error(f"Could not parse forecast columns: {e}")
-        st.stop()
-
-    forecast_df = forecast_df.dropna(subset=["date", "forecast_ndvi"]).sort_values(
-        "date"
-    )
-    if forecast_df.empty:
-        st.error("No valid rows in forecast CSV after parsing.")
+        forecast_df = monthly_series(forecast_df, "forecast_ndvi", after=df["date"].max())
+    except ValueError as exc:
+        st.error(str(exc))
         st.stop()
 
     fig3 = go.Figure()
@@ -205,10 +172,10 @@ with st.expander("About this project"):
 Reserve using Sentinel-2 satellite imagery and an LSTM neural network.
 
 **Stack:** Google Earth Engine · Google Colab · TensorFlow/Keras ·
-scikit-learn · Streamlit — $0 total cost.
+scikit-learn · Streamlit. The dashboard does not execute Earth Engine or train a model.
 
 **Key finding:** Cloud cover is the dominant data-quality constraint in this
 tropical region; a relaxed cloud filter plus seasonal (month sin/cos)
-features improved forecast accuracy meaningfully, though small-data LSTM
+features are explored in the research notebook; small-data LSTM
 smoothing remains a known limitation on sharp NDVI swings.
     """)

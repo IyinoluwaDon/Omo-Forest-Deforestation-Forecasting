@@ -1,14 +1,35 @@
-# Omo Forest NDVI explorer
+# Omo Forest NDVI Explorer
 
-A Streamlit dashboard for monthly NDVI CSVs and optional forecast CSVs. The included 16-row demonstration is illustrative data, not a live satellite feed or a deforestation alert. The research notebook explores Earth Engine exports and LSTM forecasts separately; no trained model runs in this app.
+A Streamlit dashboard for inspecting monthly NDVI history and an optional future forecast series. The bundled demonstration values are illustrative rather than an observation feed or trained forecast.
+
+## What is included
+
+- Validation of date, finite NDVI range and duplicate months
+- Historical series with future-only forecast overlay
+- Clear separation between sample data and real observations
+
+## Run locally
 
 ```sh
 python -m pip install -r requirements.txt
 streamlit run app.py
-python -m pip install pytest
-python -m pytest -q
 ```
 
-Historical CSV columns: `date,ndvi`; optional `image_count`. Forecast CSV columns: `date,forecast_ndvi`. Each month must appear once, every value must be finite and within [-1,1], and forecast months must follow history. Invalid rows produce an error rather than disappearing silently. Missing months are not imputed; chart lines can span gaps.
+## Verify
 
-NDVI changes can reflect seasonality, clouds, sensor coverage, or land-cover change. Regional averages do not locate deforestation or establish its cause. Compare forecasts against seasonal and persistence baselines using a chronological holdout before making performance claims. Earth Engine access and exports require a separate authenticated account. No license for redistribution is inferred from the notebook.
+python -m pip install pytest
+python -m pytest -q
+
+## Repository map
+
+`app.py` contains the dashboard. `validation.py` checks uploaded/supplied series. `tests/` covers validation; `omo_ndvi_forecast.ipynb` contains the research notebook.
+
+## Evidence and limitations
+
+The five validation tests pass and the dashboard renders with its demonstration CSV data.
+
+The demo does not train or execute a forecasting model. NDVI changes can reflect seasonality, clouds, sensor coverage or land-cover change and do not by themselves establish deforestation. Replace sample values with licensed, traceable observations and validate against suitable baselines before making claims.
+
+## License
+
+No repository license file is included. Unless the project owner adds a license, do not assume the code, data or model artifacts may be redistributed or reused. Verify third-party data and model terms separately.
